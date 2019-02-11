@@ -1,0 +1,25 @@
+{
+"name": "Example-1",
+"tasks":
+    [
+        {
+            "name": "Наложение картинки",
+            "overlay": {
+                "args": {
+                    "input": "./resources/input.mp4",
+                    "output": "./resources/output.mp4",
+                    "image_overlay": "./resources/image_overlay.png"
+                }
+            }
+        },
+        {
+            "name": "Транскодирование",
+            "transcoding": {
+                "args": {
+                    "input": "./resources/input.mp4",
+                    "output": "./resources/output.mp4"
+                }
+            }
+        }
+    ]
+}
