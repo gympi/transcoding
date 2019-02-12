@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import argparse
 
-from task import task_execute, tasks_registry
+from libs.task import task_execute, tasks_registry
 from tasks import *
 
 

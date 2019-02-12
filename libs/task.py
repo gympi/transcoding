@@ -1,6 +1,8 @@
 import time
 from functools import reduce
 
+from libs.arguments import argparse_adapter
+
 
 class TaskRegistry:
     def __init__(self):
@@ -89,8 +91,7 @@ class TaskWraper:
 
 
 def task_execute(task, args):
-    # print(task, args)
-    args = tasks_registry.get(task)._validator.parse_args(args)
+    args = argparse_adapter(tasks_registry.get(task)._validator).parse_args(args)
     tasks_registry.get(task)(**vars(args))
 
 

@@ -4,7 +4,7 @@ import json
 import os.path
 import yaml
 
-from task import task_execute, tasks_registry
+from libs.task import task_execute, tasks_registry
 from tasks import *
 
 

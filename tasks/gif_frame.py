@@ -1,71 +1,50 @@
-import argparse
-import re
 import sys
 import ffmpeg
 
-from task import task
+from libs.task import task
 
 
-def validator():
-    parser = argparse.ArgumentParser(description='API для транскодирования файлов')
-
-    parser.add_argument('--input', '-i',
-                        dest='input',
-                        type=str,
-                        help='Input file path',
-                        required=True,
-                        )
-
-    parser.add_argument('--output', '-o',
-                        dest='output',
-                        type=str,
-                        help='Output file path',
-                        required=True,
-                        )
-
-    parser.add_argument('--start-seconds', '-ss',
-                        dest='start_seconds',
-                        type=int,
-                        default=5,
-                        help='Time start',
-                        required=True,
-                        )
-
-    parser.add_argument('--count-frames', '-cf',
-                        dest='count_frames',
-                        type=int,
-                        default=10,
-                        help='Count frames output gif',
-                        required=True,
-                        )
-
-    def size(s, pat=re.compile(r"\d+x\d+")):
-        if not pat.match(s):
-            raise argparse.ArgumentTypeError
-        return s
-
-    parser.add_argument('--size', '-s',
-                        dest='size',
-                        type=size,
-                        help='Size output gif',
-                        required=True,
-                        )
-
-    parser.add_argument('--duration', '-d',
-                        dest='duration',
-                        type=int,
-                        default=5,
-                        help='Duration output gif',
-                        required=True,
-                        )
-
-    return parser
+validator = {
+    'input': {
+        'type': str,
+        'required': True,
+        'help': 'Input file path',
+    },
+    'output': {
+        'type': str,
+        'required': True,
+        'help': 'Output file path',
+    },
+    'start_seconds': {
+        'type': int,
+        'required': True,
+        'default': 5,
+        'help': 'Time start',
+    },
+    'count_frames': {
+        'type': int,
+        'required': True,
+        'default': 10,
+        'help': 'Count frames output gif',
+    },
+    'size': {
+        'type': str,
+        'regex': r"\d+x\d+",
+        'required': True,
+        'help': 'Size output gif',
+    },
+    'duration': {
+        'type': int,
+        'default': 5,
+        'help': 'Duration output gif',
+    }
+}
 
 
 @task(
     name='gif-frame',
     title='Создание gif видео',
-    validator=validator()
+    validator=validator
 )
 def gif_frame(input, output, start_seconds=0, size='320x240', count_frames=10, duration=3):
     """

@@ -1,6 +1,6 @@
 import ffmpeg
 
-from task import task
+from libs.task import task
 
 
 @task(
