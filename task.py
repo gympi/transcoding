@@ -1,28 +1,30 @@
 import time
-from functools import wraps, reduce
-
-tasks_registry = dict()
+from functools import reduce
 
 
-class TaskOld:
-    def __init__(self, name=None):
-        self._name = name
-        self.time_execute = 0
+class TaskRegistry:
+    def __init__(self):
+        self._tasks_registry = dict()
 
-    def __call__(self, func):
-        if not self._name:
-            self._name = func.__name__
+    def exist(self, key, **kwargs):
+        return key in self._tasks_registry
 
-        c = wraps(func)
+    def get(self, key=None):
+        if key is None:
+            return self._tasks_registry
+        elif self.exist(key):
+            return self._tasks_registry[key]
+        else:
+            raise Exception('Can not find task "{}".'.format(key))
 
-        def wrapped_func(*args, **kwargs):
-            t0 = time.time()
-            func_data = func(*args, **kwargs)
-            self.time_execute = t0 - time.time()
+    def add(self, key, task):
+        if self.exist(key):
+            raise Exception('Task "{}" exist.'.format(key))
 
-            return func_data
+        if not isinstance(task, TaskWraper):
+            raise Exception('Task "{}" does not implement interface "TaskWraper"'.format(key))
 
-        return wrapped_func
+        self._tasks_registry[key] = task
 
 
 def seconds_to_str(t):
@@ -61,15 +63,15 @@ class Task:
 
 
 class TaskWraper:
-    def __init__(self, func, name=None, *args, **kwargs):
+    def __init__(self, func, name=None, validator=None, *args, **kwargs):
         self._func = func
         self._name = name
+        self._validator = validator
         self._time_execute = TimeExecute()
-        print('init')
         self._registry()
 
     def _registry(self):
-        tasks_registry.update({self._name: self})
+        tasks_registry.add(self._name, self)
 
     def _before_execute(self):
         self._time_execute.begin()
@@ -78,7 +80,6 @@ class TaskWraper:
         self._time_execute.end()
 
     def __call__(self, *args, **kwargs):
-        print('run decorator')
         self._before_execute()
 
         func_data = self._func(*args, **kwargs)
@@ -87,17 +88,11 @@ class TaskWraper:
         return func_data
 
 
-task_old = TaskOld
+def task_execute(task, args):
+    # print(task, args)
+    args = tasks_registry.get(task)._validator.parse_args(args)
+    tasks_registry.get(task)(**vars(args))
+
+
 task = Task
-
-
-def exist_task(task, **kwargs):
-    print(task)
-    return task in tasks_registry
-
-
-def task_execute(task, **kwargs):
-    if task in tasks_registry:
-        task = tasks_registry.get(task)
-        print(task)
-        task(**kwargs)
+tasks_registry = TaskRegistry()

@@ -4,7 +4,7 @@ import json
 import os.path
 import yaml
 
-from task import exist_task, task_execute
+from task import task_execute, tasks_registry
 from tasks import *
 
 
@@ -64,7 +64,7 @@ def parser_task(task):
     else:
         _options = {k: task.get(k, v) for k, v in default_options.items()}
         command_name = _command.pop()
-        if exist_task(command_name):
+        if tasks_registry.exist(command_name):
             _command = task[command_name]
         return Task(_options, command_name, _command['args'])
 
