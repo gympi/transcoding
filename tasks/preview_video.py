@@ -63,6 +63,7 @@ def preview_video(input, output, start_seconds=0, size='320x240', count_frames=1
          .overwrite_output()
          .run(capture_stdout=True, capture_stderr=True)
          )
+        return output
     except ffmpeg.Error as e:
         print(e.stderr.decode(), file=sys.stderr)
         sys.exit(1)

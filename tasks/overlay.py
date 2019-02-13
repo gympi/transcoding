@@ -46,7 +46,9 @@ def overlay(input, output, image_overlay, position):
         (ffmpeg
          .input(input)
          .overlay(overlay_file, x=x, y=y)
-         .output(output).overwrite_output().run(capture_stdout=True, capture_stderr=True))
+         .output(output).overwrite_output().run(capture_stdout=True, capture_stderr=True)
+         )
+        return output
     #     .get_args()
     #     .overwrite_output().run(capture_stdout=True, capture_stderr=True)
     except ffmpeg.Error as e:

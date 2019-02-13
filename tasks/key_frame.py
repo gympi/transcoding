@@ -51,6 +51,7 @@ def key_frame(input, output, start_seconds=0, vframes=1, size='320x240'):
          .overwrite_output()
          .run(capture_stdout=True, capture_stderr=True)
          )
+        return output
     except ffmpeg.Error as e:
         print(e.stderr.decode(), file=sys.stderr)
         sys.exit(1)

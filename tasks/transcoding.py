@@ -30,6 +30,7 @@ def transcoding(input, output):
          .overwrite_output()
          .run()
          )
+        return output
     except ffmpeg.Error as e:
         print(e.stderr.decode(), file=sys.stderr)
         sys.exit(1)

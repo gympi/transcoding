@@ -59,7 +59,9 @@ def multi_bitrate_video(input, output, scale):
                        **{'b:v:1': '750k', 'filter:v:1': "scale=-2:{}".format(scale_2), 'profile:v:1': 'main'},
                        **{'b:v:2': '1500k', 'filter:v:2': "scale=-2:{}".format(scale_3), 'profile:v:2': 'high'}, )
          .overwrite_output()
-         .run(capture_stdout=True, capture_stderr=True))
+         .run(capture_stdout=True, capture_stderr=True)
+         )
+        return output
     except ffmpeg.Error as e:
         print(e.stderr.decode(), file=sys.stderr)
         sys.exit(1)
