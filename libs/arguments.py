@@ -19,7 +19,7 @@ def argparse_adapter(validator):
 
             arg_type = type_regex
         else:
-            arg_type = options['type']
+            arg_type = options.get('type', str)
 
         default = options.get('default')
         help = options.get('help')
